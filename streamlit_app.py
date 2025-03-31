@@ -53,7 +53,7 @@ def scrape_google_urls(query, city, max_results=200, progress_bar=None):
     api = DataForSEOAPI(username, password)
     
     # Création de la tâche
-    post_response = api.post_task(f"{query} {city}")
+    post_response = api.post_task(f"{query} {city}", depth=max_results)
     
     # Débogage
     st.write("Réponse POST de l'API:", post_response)
