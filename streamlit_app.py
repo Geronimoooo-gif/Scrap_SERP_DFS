@@ -90,13 +90,20 @@ def scrape_google_urls(query, city, max_results=200, progress_bar=None):
         st.json(get_response)
         
         # Vérification de la structure de la réponse
-       if "tasks" in get_response and get_response["tasks"]:
+        if "tasks" in get_response and get_response["tasks"]:
             task = get_response["tasks"][0]
-            if "result" in task and task["result"]:
-                for item in task["result"]:
-                    if "items" in item and item["items"]:
-                        for organic_item in item["items"]:
-                            if organic_item["type"] == "organic":
+            if "result" in task:
+                results = task.get("result", [])
+                for result in results:
+                    if "items" in result:
+                        for organic_item in result["items"]:
+                            if organic_item.get("type") == "organic":
+                                organic_results.append({
+                                    "position": organic_item.get("rank_absolute", 0),
+                                    "title": organic_item.get("title", ""),
+                                    "url": organic_item.get("url", ""),
+                                    "description": organic_item.get("description", "")
+                                })
                 
                 # Extraire les résultats organiques
                 for item in task["result"]:
