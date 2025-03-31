@@ -24,25 +24,30 @@ class DataForSEOAPI:
             'Content-Type': 'application/json'
         }
     
-    def post_task(self, query):
-        """Soumet une tâche à la file d'attente DataForSEO"""
-        data = [{
-            "keyword": query,
-            "location_name": "France",
-            "language_name": "French",
-            "device": "desktop",
-            "os": "windows",
-            "depth": 100,
-            "se_domain": "google.fr"
-        }]
-        
+    def post_task(self, query, location="Paris,Ile-de-France,France", language="fr"):
+        endpoint = "https://api.dataforseo.com/v3/serp/google/organic/task_post"
+    
+        # Correction du format de la requête
+        payload = [
+            {
+                "keyword": query,
+                "location_name": location,
+                "language_name": language,
+                "device": "desktop",
+                "os": "windows",
+                "depth": 200  # Correspond au nombre de résultats demandés
+            }
+        ]
+    
         try:
-            response = requests.post(self.post_url, headers=self.headers, data=json.dumps(data))
-            response.raise_for_status()
+            response = requests.post(
+                endpoint,
+                json=payload,  # Remarquez que nous utilisons 'json=' au lieu de 'data='
+                headers=self.headers
+            )
             return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Erreur lors de la requête POST API: {str(e)}")
-            return None
+        except Exception as e:
+            return {"error": str(e)}
     
     def get_results(self, task_id):
         """Récupère les résultats d'un ID de tâche spécifique"""
