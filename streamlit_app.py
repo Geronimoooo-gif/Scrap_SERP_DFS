@@ -105,21 +105,20 @@ def scrape_google_urls(query, max_results=200, progress_bar=None):
         time.sleep(wait_time)
         
         # Dans votre fonction de récupération des résultats
-get_response = api.get_results(task_id)
-st.write("Structure complète de la réponse:")
-st.json(get_response)
+        get_response = api.get_results(task_id)
+        st.write("Structure complète de la réponse:")
+        st.json(get_response)
 
-# Vérifiez si la structure attendue existe
-if get_response and 'tasks' in get_response and get_response['tasks']:
-    task = get_response['tasks'][0]
-    if 'result' in task and task['result']:
-        # Continuez le traitement
-        st.write("Des résultats sont disponibles")
-    else:
-        st.write("Tâche trouvée mais pas de résultats disponibles")
-else:
-    st.write("Structure de réponse inattendue")
-
+        # Vérifiez si la structure attendue existe
+        if get_response and 'tasks' in get_response and get_response['tasks']:
+            task = get_response['tasks'][0]
+            if 'result' in task and task['result']:
+                # Continuez le traitement
+                st.write("Des résultats sont disponibles")
+            else:
+                st.write("Tâche trouvée mais pas de résultats disponibles")
+        else:
+            st.write("Structure de réponse inattendue")
         
         # Vérifier si la tâche est terminée
         task_status = tasks[0].get('status_code')
