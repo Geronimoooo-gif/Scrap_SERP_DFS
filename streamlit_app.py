@@ -104,22 +104,22 @@ def scrape_google_urls(query, max_results=200, progress_bar=None):
         wait_time = 30 if attempt == 0 else 60  # Attendre 30s la première fois, puis 60s
         time.sleep(wait_time)
         
-        # Récupérer les résultats
-        get_response = api.get_results(task_id)
-        
-        if not get_response:
-            logger.warning("Pas de réponse lors de la récupération des résultats")
-            continue
-        
-        if get_response.get('status_code') != 20000:
-            error_message = get_response.get('status_message', 'Unknown error')
-            logger.warning(f"Erreur API (GET): {error_message}")
-            continue
-        
-        tasks = get_response.get('tasks', [])
-        if not tasks:
-            logger.warning("Aucune tâche retournée")
-            continue
+        # Dans votre fonction de récupération des résultats
+get_response = api.get_results(task_id)
+st.write("Structure complète de la réponse:")
+st.json(get_response)
+
+# Vérifiez si la structure attendue existe
+if get_response and 'tasks' in get_response and get_response['tasks']:
+    task = get_response['tasks'][0]
+    if 'result' in task and task['result']:
+        # Continuez le traitement
+        st.write("Des résultats sont disponibles")
+    else:
+        st.write("Tâche trouvée mais pas de résultats disponibles")
+else:
+    st.write("Structure de réponse inattendue")
+
         
         # Vérifier si la tâche est terminée
         task_status = tasks[0].get('status_code')
