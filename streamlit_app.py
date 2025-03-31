@@ -26,19 +26,17 @@ class DataForSEOAPI:
                 "language_name": language,
                 "device": "desktop",
                 "os": "windows",
-                "depth": 200  # Correspond au nombre de résultats demandés
+                "depth": max_results,  # Assurez-vous que max_results <= 200
             }
         ]
-        
-        try:
-            response = requests.post(
-                endpoint,
-                json=payload,  # Utilisation correcte de json=payload
-                headers=self.headers
-            )
-            return response.json()
-        except Exception as e:
-            return {"error": str(e)}
+        response = requests.post(
+            endpoint,
+            json=payload,
+            headers=self.headers
+        )
+        response.raise_for_status()  # Lever une erreur pour un statut HTTP 4xx/5xx
+        return response.json()
+
     
     def get_results(self, task_id):
         endpoint = f"https://api.dataforseo.com/v3/serp/google/organic/task_get/{task_id}"
